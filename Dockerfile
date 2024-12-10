@@ -4,10 +4,16 @@ FROM python:3.12-slim
 # Set the working directory
 WORKDIR /
 
-# Install dependencies and required utilities
+# Install necessary utilities and AWS CLI
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl && \
-    rm -rf /var/lib/apt/lists/*
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    # Install AWS CLI
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && sudo ./aws/install \
+    && rm -rf awscliv2.zip
 
 # Copy the current directory contents into the container
 COPY . .
