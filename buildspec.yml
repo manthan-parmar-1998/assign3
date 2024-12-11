@@ -19,7 +19,7 @@ phases:
       - echo Pushing the Docker image to Amazon ECR...
       - docker push public.ecr.aws/s9n9d4c6/parmar-repo:latest
       - echo Creating imageDefinitions.json for ECS deployment...
-      - echo '[{"name":"parmar-repo","imageUri":"public.ecr.aws/s9n9d4c6/parmar-repo:latest"}]' > imageDefinitions.json
+      - echo '[{"name":"parmar-flask-app","imageUri":"public.ecr.aws/s9n9d4c6/parmar-repo:latest"}]' > imageDefinitions.json
 
 artifacts:
   files:
