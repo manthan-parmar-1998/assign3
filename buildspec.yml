@@ -5,30 +5,25 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      - echo "Verifying AWS CLI installation..."
       - apt-get update -y
       - apt-get install -y docker.io
       - pip install awscli
-      - aws --version
-      - docker --version # Debugging to check Docker version
-
   pre_build:
     commands:
-      - echo "Verifying AWS CLI version..."
-      - aws --version
       - echo "Logging in to Amazon ECR Public..."
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s9n9d4c6
-      - echo "Pre-build phase completed."
-
   build:
     commands:
       - echo "Building the Docker image..."
       - docker build -t parmar-repo .
       - echo "Tagging the Docker image..."
       - docker tag parmar-repo:latest public.ecr.aws/s9n9d4c6/parmar-repo:latest
-
   post_build:
     commands:
       - echo "Pushing the Docker image to Amazon ECR Public..."
       - docker push public.ecr.aws/s9n9d4c6/parmar-repo:latest
-      - echo "Build and push process completed."
+      - echo "Writing imagedefinitions.json..."
+      - echo '[{"name":"parmar-flask-container","imageUri":"public.ecr.aws/s9n9d4c6/parmar-repo:latest"}]' > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
