@@ -11,15 +11,15 @@ phases:
   build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 590184053494.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s9n9d4c6/parmar-repo:latest
       - echo Building the Docker image...
-      - docker build -t mishra-flask-app .
+      - docker build -t parmar-repo .
       - echo Tagging the Docker image...
-      - docker tag mishra-flask-app:latest 590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest
+      - docker tag parmar-repo:latest public.ecr.aws/s9n9d4c6/parmar-repo:latest
       - echo Pushing the Docker image to Amazon ECR...
-      - docker push 590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest
+      - docker push public.ecr.aws/s9n9d4c6/parmar-repo:latest
       - echo Creating imageDefinitions.json for ECS deployment...
-      - echo '[{"name":"mishra-flask-app","imageUri":"590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest"}]' > imageDefinitions.json
+      - echo '[{"name":"parmar-repo","imageUri":"public.ecr.aws/s9n9d4c6/parmar-repo:latest"}]' > imageDefinitions.json
 
 artifacts:
   files:
