@@ -3,27 +3,26 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.12
+      python: 3.9
     commands:
-      - apt-get update -y
-      - apt-get install -y docker.io
-      - pip install awscli
-  pre_build:
-    commands:
-      - echo "Logging in to Amazon ECR Public..."
-      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s9n9d4c6
+      - echo Installing dependencies...
+      - pip install -r requirements.txt
+
   build:
     commands:
-      - echo "Building the Docker image..."
-      - docker build -t parmar-repo .
-      - echo "Tagging the Docker image..."
-      - docker tag parmar-repo:latest public.ecr.aws/s9n9d4c6/parmar-repo:latest
-  post_build:
-    commands:
-      - echo "Pushing the Docker image to Amazon ECR Public..."
-      - docker push public.ecr.aws/s9n9d4c6/parmar-repo:latest
-      - echo "Writing imagedefinitions.json..."
-      - echo '[{"name":"parmar-flask-container","imageUri":"public.ecr.aws/s9n9d4c6/parmar-repo:latest"}]' > imagedefinitions.json
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 590184053494.dkr.ecr.us-east-1.amazonaws.com
+      - echo Building the Docker image...
+      - docker build -t mishra-flask-app .
+      - echo Tagging the Docker image...
+      - docker tag mishra-flask-app:latest 590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest
+      - echo Pushing the Docker image to Amazon ECR...
+      - docker push 590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest
+      - echo Creating imageDefinitions.json for ECS deployment...
+      - echo '[{"name":"mishra-flask-app","imageUri":"590184053494.dkr.ecr.us-east-1.amazonaws.com/mishra-flask-app:latest"}]' > imageDefinitions.json
+
 artifacts:
   files:
-    - imagedefinitions.json
+    - app.py
+    - requirements.txt
+    - imageDefinitions.json
